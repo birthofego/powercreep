@@ -1,18 +1,15 @@
-function StatBar({ label, value, max, color }) {
-  const percentage = (value / max) * 100;
+import { fonts } from '../styles/theme';
 
+function StatBar({ label, value, max, color }) {
+  const pct = Math.min((value / max) * 100, 100);
   return (
-    <div style={{ marginBottom: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-        <span style={{ color: color, fontFamily: 'monospace', fontSize: '0.8rem', letterSpacing: '2px' }}>
-          {label}
-        </span>
-        <span style={{ color: '#4a4845', fontFamily: 'monospace', fontSize: '0.8rem' }}>
-          {value}/{max}
-        </span>
+    <div style={{ marginBottom: '7px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
+        <span style={{ fontFamily: fonts.mono, fontSize: '9px', color, letterSpacing: '1px' }}>{label}</span>
+        <span style={{ fontFamily: fonts.mono, fontSize: '9px', color: '#444' }}>{value}/{max}</span>
       </div>
-      <div style={{ background: '#1a1a1a', height: '8px' }}>
-        <div style={{ width: `${percentage}%`, height: '100%', background: color }} />
+      <div style={{ height: '4px', background: '#1a1a1e' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: color }} />
       </div>
     </div>
   );
