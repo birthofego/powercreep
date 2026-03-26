@@ -5,6 +5,7 @@ import SignUp from './auth/SignUp';
 import ChooseClass from './auth/ChooseClass';
 import ChooseVice from './auth/ChooseVice';
 import NameCharacter from './auth/NameCharacter';
+import Login from './auth/Login';
 import Home from './screens/Home';
 import Profile from './screens/Profile';
 import Boss from './screens/Boss';
@@ -12,7 +13,6 @@ import Weapons from './screens/Weapons';
 import Journal from './screens/Journal';
 import BottomNav from './components/BottomNav';
 import { colors } from './styles/theme';
-import Login from './auth/Login';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -23,12 +23,34 @@ function App() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
+      if (session) {
+        supabase
+          .from('users_profile')
+          .select('id')
+          .eq('id', session.user.id)
+          .single()
+          .then(({ data }) => {
+            if (data) setSession(session);
+            setLoading(false);
+          });
+      } else {
+        setLoading(false);
+      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      if (!session) {
+        setSession(null);
+        return;
+      }
+      supabase
+        .from('users_profile')
+        .select('id')
+        .eq('id', session.user.id)
+        .single()
+        .then(({ data }) => {
+          if (data) setSession(session);
+        });
     });
 
     return () => subscription.unsubscribe();
@@ -41,7 +63,9 @@ function App() {
     else if (authStep === 'chooseVice') setAuthStep('nameCharacter');
   }
 
-  function handleComplete() {
+  async function handleComplete() {
+    const { data: { session } } = await supabase.auth.getSession();
+    setSession(session);
     setAuthStep('welcome');
   }
 

@@ -1,15 +1,43 @@
-import { fonts } from '../styles/theme';
+import { fonts, colors } from '../styles/theme';
 
 function StatBar({ label, value, max, color }) {
   const pct = Math.min((value / max) * 100, 100);
+
   return (
-    <div style={{ marginBottom: '7px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
-        <span style={{ fontFamily: fonts.mono, fontSize: '9px', color, letterSpacing: '1px' }}>{label}</span>
-        <span style={{ fontFamily: fonts.mono, fontSize: '9px', color: '#444' }}>{value}/{max}</span>
+    <div style={{ marginBottom: '8px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', alignItems: 'baseline' }}>
+        <span style={{
+          fontFamily: fonts.heading,
+          fontSize: '11px',
+          fontWeight: 600,
+          color: color,
+          letterSpacing: '1.5px',
+          textTransform: 'uppercase',
+        }}>
+          {label}
+        </span>
+        <span style={{
+          fontFamily: fonts.mono,
+          fontSize: '10px',
+          color: colors.textDim,
+        }}>
+          {value}/{max}
+        </span>
       </div>
-      <div style={{ height: '4px', background: '#1a1a1e' }}>
-        <div style={{ width: `${pct}%`, height: '100%', background: color }} />
+      <div style={{
+        height: '4px',
+        background: colors.surface2,
+        borderRadius: '2px',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          width: `${pct}%`,
+          height: '100%',
+          background: color,
+          borderRadius: '2px',
+          transition: 'width 0.4s ease',
+          boxShadow: `0 0 8px ${color}33`,
+        }} />
       </div>
     </div>
   );
